@@ -265,3 +265,13 @@ org.eclipse.core.runtime.CoreException: The Class File Viewer cannot handle the 
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1515)
 !SUBENTRY 2 org.eclipse.jdt.ui 4 996 2017-11-28 10:52:11.247
 !MESSAGE The Class File Viewer cannot handle the given input ('org.eclipse.ui.ide.FileStoreEditorInput').
+!SESSION 2017-12-04 07:06:44.182 -----------------------------------------------
+eclipse.buildId=4.7.0.I20170612-0950
+java.version=1.8.0_144
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -keyring /Users/qiuyuguo/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -data /Users/qiuyuguo/Dropbox/work/12_GREDE/GREDEJava_dev -product org.eclipse.epp.package.java.product -keyring /Users/qiuyuguo/.eclipse_keyring
+
+!ENTRY org.eclipse.core.net 1 0 2017-12-04 07:07:02.116
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences

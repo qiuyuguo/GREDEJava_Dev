@@ -2,5 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/qiuyuguo/Dropbox/school/coursera_series/coursera-Algorithm_2017/algs4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

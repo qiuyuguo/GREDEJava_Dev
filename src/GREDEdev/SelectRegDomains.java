@@ -28,8 +28,8 @@ public class SelectRegDomains {
     
     // Read pre-calculated transcriptome-wide regulatory domains
     public ArrayList<GenomeRegion> readRegDomains(String arg){
-    	RefRegdomains = new ArrayList<GenomeRegion>();
-    	In in = new In(arg);
+    		RefRegdomains = new ArrayList<GenomeRegion>();
+    		In in = new In(arg);
         while(!in.isEmpty()){
             String unsplitLine = in.readString();
             String[] items = unsplitLine.split("\t");

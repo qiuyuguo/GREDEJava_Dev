@@ -15,8 +15,15 @@ public class DataTypes {
     static class GenomeLocus{
         String chr;
         int locus;
-        String direction;
         String gene;
+        String direction;
+    }
+    
+    static class Peak{
+    		String id;
+        String chr;
+        int locus;
+        float score;
     }
     
     // comparator used to sort genome regions by 'start'
