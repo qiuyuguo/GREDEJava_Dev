@@ -31,7 +31,7 @@ public class IntervalST<Value>  {
             this.interval = interval;
             this.value    = value;
             this.N        = 1;
-            this.max      = interval.max;
+            this.max      = interval.max();
         }
     }
 
@@ -141,7 +141,7 @@ public class IntervalST<Value>  {
         while (x != null) {
             if (interval.intersects(x.interval)) return x.interval;
             else if (x.left == null)             x = x.right;
-            else if (x.left.max < interval.min)  x = x.right;
+            else if (x.left.max < interval.min())  x = x.right;
             else                                 x = x.left;
         }
         return null;
@@ -167,9 +167,9 @@ public class IntervalST<Value>  {
             list.add(x.interval);
             found1 = true;
         }
-        if (x.left != null && x.left.max >= interval.min)
+        if (x.left != null && x.left.max >= interval.min())
             found2 = searchAll(x.left, interval, list);
-        if (found2 || x.left == null || x.left.max < interval.min)
+        if (found2 || x.left == null || x.left.max < interval.min())
             found3 = searchAll(x.right, interval, list);
         return found1 || found2 || found3;
     }
@@ -202,7 +202,7 @@ public class IntervalST<Value>  {
     private void fix(Node x) {
         if (x == null) return;
         x.N = 1 + size(x.left) + size(x.right);
-        x.max = max3(x.interval.max, max(x.left), max(x.right));
+        x.max = max3(x.interval.max(), max(x.left), max(x.right));
     }
 
     private int max(Node x) {
@@ -253,7 +253,7 @@ public class IntervalST<Value>  {
     private boolean checkMax() { return checkMax(root); }
     private boolean checkMax(Node x) {
         if (x == null) return true;
-        return x.max ==  max3(x.interval.max, max(x.left), max(x.right));
+        return x.max ==  max3(x.interval.max(), max(x.left), max(x.right));
     }
 
 

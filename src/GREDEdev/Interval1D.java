@@ -43,8 +43,8 @@ public class Interval1D {
      */
     public static final Comparator<Interval1D> LENGTH_ORDER = new LengthComparator();
 
-    private final double min;
-    private final double max;
+    private final int min;
+    private final int max;
 
     /**
      * Initializes a closed interval [min, max].
@@ -57,15 +57,15 @@ public class Interval1D {
      *         <tt>Double.NEGATIVE_INFINITY</tt>
 
      */
-    public Interval1D(double min, double max) {
+    public Interval1D(int min, int max) {
         if (Double.isInfinite(min) || Double.isInfinite(max))
             throw new IllegalArgumentException("Endpoints must be finite");
         if (Double.isNaN(min) || Double.isNaN(max))
             throw new IllegalArgumentException("Endpoints cannot be NaN");
 
         // convert -0.0 to +0.0
-        if (min == 0.0) min = 0.0;
-        if (max == 0.0) max = 0.0;
+        if (min == 0) min = 0;
+        if (max == 0) max = 0;
 
         if (min <= max) {
             this.min = min;
@@ -80,7 +80,7 @@ public class Interval1D {
      * @return the left endpoint of this interval
      * @deprecated Replaced by {@link #min()}.
      */
-    public double left() { 
+    public int left() { 
         return min;
     }
 
@@ -89,7 +89,7 @@ public class Interval1D {
      * @return the right endpoint of this interval
      * @deprecated Replaced by {@link #max()}.
      */
-    public double right() { 
+    public int right() { 
         return max;
     }
 
@@ -98,7 +98,7 @@ public class Interval1D {
      *
      * @return the min endpoint of this interval
      */
-    public double min() { 
+    public int min() { 
         return min;
     }
 
@@ -107,7 +107,7 @@ public class Interval1D {
      *
      * @return the max endpoint of this interval
      */
-    public double max() { 
+    public int max() { 
         return max;
     }
 
@@ -131,7 +131,7 @@ public class Interval1D {
      * @return <tt>true</tt> if this interval contains the value <tt>x</tt>;
      *         <tt>false</tt> otherwise
      */
-    public boolean contains(double x) {
+    public boolean contains(int x) {
         return (min <= x) && (x <= max);
     }
 
@@ -140,7 +140,7 @@ public class Interval1D {
      *
      * @return the length of this interval (max - min)
      */
-    public double length() {
+    public int length() {
         return max - min;
     }
 
@@ -174,11 +174,18 @@ public class Interval1D {
      * @return an integer hash code for this interval
      */
     public int hashCode() {
-        int hash1 = ((Double) min).hashCode();
-        int hash2 = ((Double) max).hashCode();
+        int hash1 = ((Integer) min).hashCode();
+        int hash2 = ((Integer) max).hashCode();
         return 31*hash1 + hash2;
     }
 
+    // create a compareTo method for user to compare the min of two Interval1D objects
+    public int compareTo(Interval1D that) {
+    		if (this.min < that.min) return -1;
+    		else if (this.min > that.min) return +1;
+    		else return 0;
+    }
+    
     // ascending order of min endpoint, breaking ties by max endpoint
     private static class MinEndpointComparator implements Comparator<Interval1D> {
         public int compare(Interval1D a, Interval1D b) {
@@ -214,16 +221,15 @@ public class Interval1D {
 
 
 
-
     /**
      * Unit tests the <tt>Interval1D</tt> data type.
      */
     public static void main(String[] args) {
         Interval1D[] intervals = new Interval1D[4];
-        intervals[0] = new Interval1D(15.0, 33.0);
-        intervals[1] = new Interval1D(45.0, 60.0);
-        intervals[2] = new Interval1D(20.0, 70.0);
-        intervals[3] = new Interval1D(46.0, 55.0);
+        intervals[0] = new Interval1D(15, 33);
+        intervals[1] = new Interval1D(45, 60);
+        intervals[2] = new Interval1D(20, 70);
+        intervals[3] = new Interval1D(46, 55);
 
         StdOut.println("Unsorted");
         for (int i = 0; i < intervals.length; i++)
