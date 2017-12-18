@@ -63,26 +63,26 @@ public class IntervalST<Value>  {
     *  randomized insertion
     ***************************************************************************/
     public void put(Interval1D interval, Value value) {
-        if (contains(interval)) { StdOut.println("duplicate"); remove(interval);  }
-        root = randomizedInsert(root, interval, value);
+        if (contains(interval)) { StdOut.println("duplicate"); remove(interval);  } // if the same interval exist, abort
+        root = randomizedInsert(root, interval, value); // when insert, walk thru from root
     }
 
     // make new node the root with uniform probability
     private Node randomizedInsert(Node x, Interval1D interval, Value value) {
-        if (x == null) return new Node(interval, value);
-        if (Math.random() * size(x) < 1.0) return rootInsert(x, interval, value);
+        if (x == null) return new Node(interval, value); // this means it has found the correct spot and creates a new Node
+        if (Math.random() * size(x) < 1.0) return rootInsert(x, interval, value); // root insert with probability of 1/table_size 
         int cmp = interval.compareTo(x.interval);
         if (cmp < 0)  x.left  = randomizedInsert(x.left,  interval, value);
         else          x.right = randomizedInsert(x.right, interval, value);
-        fix(x);
-        return x;
+        fix(x); // adjust x to the local condition
+        return x; // ?
     }
 
     private Node rootInsert(Node x, Interval1D interval, Value value) {
         if (x == null) return new Node(interval, value);
         int cmp = interval.compareTo(x.interval);
-        if (cmp < 0) { x.left  = rootInsert(x.left,  interval, value); x = rotR(x); }
-        else         { x.right = rootInsert(x.right, interval, value); x = rotL(x); }
+        if (cmp < 0) { x.left  = rootInsert(x.left,  interval, value); x = rotR(x); } // rotR:
+        else         { x.right = rootInsert(x.right, interval, value); x = rotL(x); } // rotL:
         return x;
     }
 
