@@ -40,14 +40,10 @@ public class DefineRegulatoryDomains {
     public ArrayList<GenomeLocus> readGenomeLoci(String arg){
         ArrayList<GenomeLocus> GenomeLoci = new ArrayList<GenomeLocus>();
         In in = new In(arg);
-        while(!in.isEmpty()){
-            GenomeLocus item = new GenomeLocus();
+        while(!in.isEmpty()){            
             String line = in.readLine();
             String[] items = line.split("\t");
-            item.chr = items[1];
-            item.locus = Integer.parseInt(items[2]);
-            item.direction = items[3];
-            item.gene = items[4];
+            GenomeLocus item = new GenomeLocus(items[1], Integer.parseInt(items[2]), items[3], items[4]);
             GenomeLoci.add(item);
         }
         return GenomeLoci;
@@ -73,12 +69,12 @@ public class DefineRegulatoryDomains {
     private GenomeRegion generateRegDomain(GenomeLocus gr, GenomeLocus grPrev, GenomeLocus grNext){
         int bR = 1000;
         int eR = 500000;
-        GenomeRegion retPrimary = new GenomeRegion();
-        retPrimary.chr = gr.chr;
-        retPrimary.start = gr.locus - Math.max(bR, Math.min(Math.abs(grPrev.locus+bR-gr.locus), eR));
-        retPrimary.end = gr.locus + Math.max(bR, Math.min(Math.abs(grNext.locus-bR-gr.locus), eR));
-        retPrimary.direction = gr.direction;
-        retPrimary.gene = gr.gene;
+        String chr = gr.getChr();
+        int start = gr.getLocus() - Math.max(bR, Math.min(Math.abs(grPrev.getLocus()+bR-gr.getLocus()), eR));
+        int end = gr.getLocus() + Math.max(bR, Math.min(Math.abs(grNext.getLocus()-bR-gr.getLocus()), eR));
+        String direction = gr.getDir();
+        String gene = gr.getGene();
+        GenomeRegion retPrimary = new GenomeRegion(chr, start, end, direction, gene);
         GenomeRegion ret = checkRange(retPrimary);
         return ret;
     }
@@ -86,27 +82,36 @@ public class DefineRegulatoryDomains {
     // check whether the given range is within the range of the chromosome 
     // adjust range based on the check and return the new range
     private GenomeRegion checkRange(GenomeRegion gr){
-        int chrN = findChr(gr.chr);
-        GenomeRegion ret = new GenomeRegion();
-        if (gr.start >= 0 && gr.end <= gt[chrN-1]){
-            ret.chr = revertChr(chrN);
-            ret.start = gr.start;
-            ret.end = gr.end;
-            ret.direction = gr.direction;
-            ret.gene = gr.gene;
-        }else if (gr.start < 0 && gr.end <= gt[chrN-1]){
-            ret.chr = revertChr(chrN);
-            ret.start = 0;
-            ret.end = gr.end;
-            ret.direction = gr.direction;
-            ret.gene = gr.gene;
-        }else if (gr.start >= 0 && gr.end > gt[chrN-1]){
-            ret.chr = revertChr(chrN);
-            ret.start = gr.start;
-            ret.end = gt[chrN-1];
-            ret.direction = gr.direction;
-            ret.gene = gr.gene;
+        
+    		int chrN = findChr(gr.getChr());
+        
+    		String chr = "";
+    		int start = 0;
+    		int end = 0;
+    		String direction = "";
+    		String gene = "";
+    		
+    		if (gr.getStart() >= 0 && gr.getEnd() <= gt[chrN-1]){
+            chr = revertChr(chrN);
+            start = gr.getStart();
+            end = gr.getEnd();
+            direction = gr.getDir();
+            gene = gr.getGene();
+        }else if (gr.getStart() < 0 && gr.getEnd() <= gt[chrN-1]){
+            chr = revertChr(chrN);
+            start = 0;
+            end = gr.getEnd();
+            direction = gr.getDir();
+            gene = gr.getGene();
+        }else if (gr.getStart() >= 0 && gr.getEnd() > gt[chrN-1]){
+            chr = revertChr(chrN);
+            start = gr.getStart();
+            end = gt[chrN-1];
+            direction = gr.getDir();
+            gene = gr.getGene();
         }
+        
+    		GenomeRegion ret = new GenomeRegion(chr, start, end, direction, gene);
         return ret;
     }
     
@@ -148,7 +153,7 @@ public class DefineRegulatoryDomains {
         Out RDOut = new Out("mm9.RegDomains.txt");
         for (int i = 0; i < RegDomains.size(); i++){
             GenomeRegion item = RegDomains.get(i);
-            String line = item.chr + "\t" + item.start +"\t" + item.end + "\t" + item.direction + "\t" + item.gene;
+            String line = item.getChr() + "\t" + item.getStart() +"\t" + item.getEnd() + "\t" + item.getDir() + "\t" + item.getGene();
             RDOut.println(line);
         }
         RDOut.close();

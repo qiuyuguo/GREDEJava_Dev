@@ -22,7 +22,7 @@ public class SelectRegDomains {
         RefRegdomains = readRegDomains(arg1);
         GeneList = readGeneList(arg2);
         for (int i = 0; i < RefRegdomains.size(); i++){
-            RefRegDomainTable.put(RefRegdomains.get(i).gene, RefRegdomains.get(i));
+            RefRegDomainTable.put(RefRegdomains.get(i).getGene(), RefRegdomains.get(i));
         }
     }
     
@@ -33,12 +33,12 @@ public class SelectRegDomains {
         while(!in.isEmpty()){
             String unsplitLine = in.readString();
             String[] items = unsplitLine.split("\t");
-            GenomeRegion newRegion = new GenomeRegion();
-            newRegion.chr = items[0];
-            newRegion.start = Integer.parseInt(items[1]);
-            newRegion.end = Integer.parseInt(items[2]);
-            newRegion.direction = items[3];
-            newRegion.gene = items[4];
+            String chr = items[0];
+            int start = Integer.parseInt(items[1]);
+            int end = Integer.parseInt(items[2]);
+            String direction = items[3];
+            String gene = items[4];
+            GenomeRegion newRegion = new GenomeRegion(chr, start, end, direction, gene);
             RefRegdomains.add(newRegion);
         }
         return RefRegdomains;
@@ -60,14 +60,14 @@ public class SelectRegDomains {
         RandomRegions = pickRandomRegDomains();
         Collections.sort(RandomRegions, new GenomeRegionComparator());
         for (int i = 1; i < RandomRegions.size(); i++){
-            int start1 = RandomRegions.get(i-1).start;
-            int end1 = RandomRegions.get(i-1).end;
-            int start2 = RandomRegions.get(i).start;
-            int end2 = RandomRegions.get(i).end;
+            int start1 = RandomRegions.get(i-1).getStart();
+            int end1 = RandomRegions.get(i-1).getEnd();
+            int start2 = RandomRegions.get(i).getStart();
+            int end2 = RandomRegions.get(i).getEnd();
             if(end2 - start1 < end1 - start1 + end2 - start2){
                 int mid = (end1 + start2)/2;
-                RandomRegions.get(i-1).end = mid -1;
-                RandomRegions.get(i).start = mid;
+                RandomRegions.get(i-1).setEnd(mid - 1);
+                RandomRegions.get(i).setStart(mid);
             }
         }
     }
@@ -93,14 +93,14 @@ public class SelectRegDomains {
         SelectedRegions = pickRegDomains();
         Collections.sort(SelectedRegions, new GenomeRegionComparator());
         for (int i = 1; i < SelectedRegions.size(); i++){
-            int start1 = SelectedRegions.get(i-1).start;
-            int end1 = SelectedRegions.get(i-1).end;
-            int start2 = SelectedRegions.get(i).start;
-            int end2 = SelectedRegions.get(i).end;
+            int start1 = SelectedRegions.get(i-1).getStart();
+            int end1 = SelectedRegions.get(i-1).getEnd();
+            int start2 = SelectedRegions.get(i).getStart();
+            int end2 = SelectedRegions.get(i).getEnd();
             if(end2 - start1 < end1 - start1 + end2 - start2){
                 int mid = (end1 + start2)/2;
-                SelectedRegions.get(i-1).end = mid -1;
-                SelectedRegions.get(i).start = mid;
+                SelectedRegions.get(i-1).setEnd(mid - 1);
+                SelectedRegions.get(i).setStart(mid);
             }
         }
     }
@@ -122,14 +122,14 @@ public class SelectRegDomains {
         Out selectedRDOut = new Out("target.RegDomains.txt");
         for (int i = 0; i < SelectedRegions.size(); i++){
             GenomeRegion item = SelectedRegions.get(i);
-            String line = item.chr + "\t" + item.start +"\t" + item.end + "\t" + item.direction + "\t" + item.gene;
+            String line = item.getChr() + "\t" + item.getStart() +"\t" + item.getEnd() + "\t" + item.getDir() + "\t" + item.getGene();
             selectedRDOut.println(line);
         }
         selectedRDOut.close();
         Out randomRDOut = new Out("random.RegDomains.txt");
         for (int i = 0; i < RandomRegions.size(); i++){
             GenomeRegion item = RandomRegions.get(i);
-            String line = item.chr + "\t" + item.start +"\t" + item.end + "\t" + item.direction + "\t" + item.gene;
+            String line = item.getChr() + "\t" + item.getStart() +"\t" + item.getEnd() + "\t" + item.getDir() + "\t" + item.getGene();
             randomRDOut.println(line);
         }
         randomRDOut.close();

@@ -2,6 +2,8 @@ package GREDEdev;
 
 import java.util.ArrayList;
 import GREDEdev.DataTypes.*;
+import GREDEdev.IntervalST;
+import GREDEdev.Interval1D;
 
 public class CountPeaksInRegDomains {
 	
@@ -22,12 +24,12 @@ public class CountPeaksInRegDomains {
         while(!in.isEmpty()){
             String unsplitLine = in.readString();
             String[] items = unsplitLine.split("\t");
-            GenomeRegion newRegion = new GenomeRegion();
-            newRegion.chr = items[0];
-            newRegion.start = Integer.parseInt(items[1]);
-            newRegion.end = Integer.parseInt(items[2]);
-            newRegion.direction = items[3];
-            newRegion.gene = items[4];
+            String chr = items[0];
+            int start = Integer.parseInt(items[1]);
+            int end = Integer.parseInt(items[2]);
+            String direction = items[3];
+            String gene = items[4];
+            GenomeRegion newRegion = new GenomeRegion(chr, start, end, direction, gene);
             regDomains.add(newRegion);
         }
 		return regDomains;
@@ -40,10 +42,11 @@ public class CountPeaksInRegDomains {
         while(!in.isEmpty()){
             String unsplitLine = in.readString();
             String[] items = unsplitLine.split("\t");
-            Peak newPeak = new Peak();
-            newPeak.id = items[0];
-            newPeak.chr = items[1];
-            newPeak.locus = Integer.parseInt(items[2]);
+            String id = items[0];
+            String chr = items[1];
+            int locus = Integer.parseInt(items[2]);
+            float score = Float.parseFloat(items[3]);
+            Peak newPeak = new Peak(id, chr, locus, score);
             peaks.add(newPeak);
         }
 		return peaks;
@@ -56,13 +59,22 @@ public class CountPeaksInRegDomains {
 	public void PreprocessTargetDomains () {
 		RegDomainST = new ArrayList<IntervalST>();
 		for (int i = 0; i < 21; i++) {
-			RegDomainST.add(new IntervalST());
+			RegDomainST.add(new IntervalST<String>());
 		}
 		for (int i = 0; i < targetDomains.size(); i++) {
 			GenomeRegion currentDomain = targetDomains.get(i);
-			int chrIndex = Integer.parseInt(currentDomain.chr);
-			Interval1D newRegion = new Interval1D(currentDomain.start, currentDomain.end);
-			RegDomainST.get(chrIndex).put(newRegion, null);
+			int chrIndex = 0;
+			if (currentDomain.getChr() == "chrX") {
+				chrIndex = 20;
+			}
+			else if (currentDomain.getChr() == "chrY") {
+				chrIndex = 21;
+			}
+			else {
+				chrIndex = Integer.parseInt(currentDomain.getChr().replace("chr", ""));
+			}			
+			Interval1D newRegion = new Interval1D(currentDomain.getStart(), currentDomain.getEnd());
+			RegDomainST.get(chrIndex).put(newRegion, currentDomain.getGene());
 		}
 	}
 	
