@@ -7,6 +7,7 @@ public class CountPeaksInRegDomains {
 	
 	private ArrayList<GenomeRegion> targetDomains;
 	private ArrayList<Peak> peaks;
+	private ArrayList<IntervalST> RegDomainST;
 	
 	// create object
 	public CountPeaksInRegDomains (String RegDomainName, String PeakName) {
@@ -50,6 +51,20 @@ public class CountPeaksInRegDomains {
 	
 	
 	// iteratively judge if the input peaks are within the input reg domains
+	
+	// 1. Adding targetDomains into RegDomainST indexed by chr numbers
+	public void PreprocessTargetDomains () {
+		RegDomainST = new ArrayList<IntervalST>();
+		for (int i = 0; i < 21; i++) {
+			RegDomainST.add(new IntervalST());
+		}
+		for (int i = 0; i < targetDomains.size(); i++) {
+			GenomeRegion currentDomain = targetDomains.get(i);
+			int chrIndex = Integer.parseInt(currentDomain.chr);
+			Interval1D newRegion = new Interval1D(currentDomain.start, currentDomain.end);
+			RegDomainST.get(chrIndex).put(newRegion, null);
+		}
+	}
 	
 	
 	// judge whether a peak is within any of the reg domains
